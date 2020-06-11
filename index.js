@@ -39,8 +39,21 @@ Airplane.prototype.land = function () {
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
-
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.stomach = [];
+}
+Person.prototype.eat = function(food) {
+  if (this.stomach.length < 10) {
+    this.stomach.push(food);
+  }
+}
+Person.prototype.poop = function() {
+  this.stomach = [];
+}
+Person.prototype.toString = function() {
+  return `${this.name}, ${this.age}`;
 }
 
 /*
@@ -57,8 +70,26 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
-
+function Car(model, milesPerGallon) {
+  this.model = model;
+  this.milesPerGallon = milesPerGallon;
+  this.tank = 0;
+  this.odometer = 0;
+}
+Car.prototype.fill = function (gallons) {
+  this.tank += gallons;
+}
+Car.prototype.drive = function (distance) {
+  let gallonsNeeded = (distance/this.milesPerGallon);
+  if (this.tank >= gallonsNeeded) {
+    this.odometer += distance;
+    this.tank -= gallonsNeeded;
+  } else {
+    let milesDriven = (this.tank * this.milesPerGallon);
+    this.odometer += milesDriven;
+    this.tank = 0;
+    return `I ran out of fuel at ${milesDriven} miles!`
+  }
 }
 
 /*
@@ -68,18 +99,24 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
-
+function Baby(babyAttributes, age, favoriteToy) {
+  Person.call(this, babyAttributes);
+  this.age = age;
+  this.favoriteToy = favoriteToy;
+}
+Baby.prototype = Object.create(Person.prototype);
+Baby.prototype.play = function () {
+  return `Playing with ${this.favoriteToy}`;
 }
 
 /* 
   TASK 4
 
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. Global Binding: When applying this to the global scope, it will reference/point to the window object (which is the parent of all JavaScript objects).
+  2. Implicit Binding: When applying this to a particular object (invocation via dot notation), it will reference/point to the instance object (and its properties/methods).
+  3. New Binding: In the context of a constructor, the "this" will refer to the particular instance being created. It's useful for setting the initial properties of an object.
+  4. Explicit Binding: Utilizing the call() or apply() functions will explicitly determine which object the "this" keyword will refer to (based on the instance passed in as an argument).
 */
 
 
